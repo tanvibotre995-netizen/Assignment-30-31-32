@@ -1,31 +1,29 @@
 import os
 import time
 
-directory = input("Enter directory path: ")
-log_file = "DeletedFilesLog.txt"
+file_path = input("Enter text file path: ")
 
 while True:
     try:
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                path = os.path.join(root, file)
+        if not os.path.exists(file_path):
+            print("Error: File does not exist.")
 
-                try:
-                    if os.path.getsize(path) == 0:
-                        os.remove(path)
+        elif os.path.getsize(file_path) == 0:
+            print("Error: File is empty.")
 
-                        with open(log_file, "a") as log:
-                            log.write(path + "\n")
+        else:
+            with open(file_path, "r") as f:
+                print("\n----- File Content -----")
+                print(f.read())
+                print("------------------------")
 
-                        print("Deleted:", path)
+    except PermissionError:
+        print("Error: Permission denied.")
 
-                except PermissionError:
-                    print("Permission denied:", path)
-
-                except Exception as e:
-                    print("Error:", e)
+    except OSError:
+        print("Error: File cannot be opened.")
 
     except Exception as e:
-        print("Directory Error:", e)
+        print("Error:", e)
 
-    time.sleep(3600)      # 1 hour
+    time.sleep(60)
